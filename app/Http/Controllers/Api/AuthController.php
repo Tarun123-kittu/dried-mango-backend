@@ -34,4 +34,8 @@ class AuthController extends Controller
         }
     }
 
+    public function test(){
+        return "Api is working....";
+    }
+
 }
