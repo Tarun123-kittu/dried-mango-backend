@@ -20,11 +20,11 @@ class BearerTokenMiddleware
         try {
             $user = JWTAuth::parseToken()->authenticate();
             if ($user === null) {
-                return ApiResponseClass::throw('Unauthorized: Token missing or invalid', 401);
+                return ApiResponseClass::throw(__('messages.invalid_token'), 401);
             }
             return $next($request);
         } catch (\Exception $e) {
-            return ApiResponseClass::throw('Unauthorized: Token missing or invalid', 401);
+            return ApiResponseClass::throw(__('messages.invalid_token'), 401);
         }
     }
 }

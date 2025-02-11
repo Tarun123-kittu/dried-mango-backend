@@ -20,7 +20,7 @@ class ApiResponseClass
         );
     }
 
-    public static function sendResponse($result, $message, $code = 200)
+    public static function sendResponse($result=null, $message, $code = 200)
     {
         return response()->json([
             'success' => true,

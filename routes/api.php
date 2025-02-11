@@ -6,7 +6,12 @@ use App\Http\Controllers\Api\AuthController;
 use App\Enums\RoleEnum;
 
 Route::post('login', [AuthController::class, 'login']);
+Route::post('forgot-password', [AuthController::class, 'forgotPassword']);
+Route::post('reset-password', [AuthController::class, 'resetPassword']);
 
 Route::middleware('auth')->group(function () {
-    Route::get('test', [AuthController::class, 'test'])->middleware('role:' . implode(',', [RoleEnum::ADMIN->value]));;
+    
+    Route::get('test', [AuthController::class, 'test'])->middleware('role:' . implode(',', [RoleEnum::ADMIN->value]));
+
+    Route::post('update-password', [AuthController::class, 'updatePassword']);
 });

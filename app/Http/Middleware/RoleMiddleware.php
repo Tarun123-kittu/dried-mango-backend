@@ -16,13 +16,13 @@ class RoleMiddleware
         try {
             $user = JWTAuth::parseToken()->authenticate();
             if ($user===null) {
-                return ApiResponseClass::throw('Unauthorized: User not found', 401);
+                return ApiResponseClass::throw(__('messages.unauthorized'), 401);
             }
 
             $allowedRoles = array_intersect($roles, RoleEnum::getValues());
 
             if (!in_array($user->role->name, $allowedRoles)) {
-                return ApiResponseClass::throw('Forbidden: Access Denied', 403);
+                return ApiResponseClass::throw(__('messages.unauthorized'), 403);
             }
 
             return $next($request);
