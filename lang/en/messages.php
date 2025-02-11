@@ -9,5 +9,7 @@ return [
     'password_min' => 'Password must be at least 6 characters.',
     'invalid_credentials' => 'Invalid email or password.',
     'unauthorized' => 'Unauthorized access.',
-    'something_went_wrong' => 'Something went wrong, please try again later.'
+    'user_not_found' => 'User not found.',
+    'something_went_wrong' => 'Something went wrong, please try again later.',
+    'token_generation_fail' => 'Token generation failed.'
 ];

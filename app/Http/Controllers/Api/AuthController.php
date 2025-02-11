@@ -10,6 +10,7 @@ use App\Http\Resources\AuthResource;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use App\Models\User;
+use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Support\Facades\Hash;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
@@ -29,13 +30,13 @@ class AuthController extends Controller
             $data = $this->authInterface->login($request);
             DB::commit();
             return ApiResponseClass::sendResponse(new AuthResource($data), __('messages.login_success'), 200);
-        } catch (\Exception $ex) {
-            return ApiResponseClass::rollback($ex->getMessage());
+        } catch (HttpResponseException $ex) {
+            throw $ex;
         }
     }
 
-    public function test(){
+    public function test()
+    {
         return "Api is working....";
     }
-
 }
