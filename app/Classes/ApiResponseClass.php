@@ -14,13 +14,13 @@ class ApiResponseClass
         throw new HttpResponseException(
             response()->json([
                 "success" => false,
-                "message" => is_string($e) ? $e : $e->getMessage(),
+                "message" => $e,
                 "data" => null
             ], $status)
         );
     }
 
-    public static function sendResponse($result=null, $message, $code = 200)
+    public static function sendResponse($result = null, $message, $code = 200)
     {
         return response()->json([
             'success' => true,
@@ -28,4 +28,5 @@ class ApiResponseClass
             'data' => $result
         ], $code);
     }
+
 }

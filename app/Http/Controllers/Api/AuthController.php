@@ -12,7 +12,6 @@ use App\Http\Requests\UpdatePasswordRequest;
 use App\Http\Resources\AuthResource;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
-use App\Models\User;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Support\Facades\Hash;
 use Tymon\JWTAuth\Facades\JWTAuth;
@@ -35,6 +34,8 @@ class AuthController extends Controller
             return ApiResponseClass::sendResponse(new AuthResource($data), __('messages.login_success'), 200);
         } catch (HttpResponseException $ex) {
             throw $ex;
+        } catch (\Exception $e) {
+            return ApiResponseClass::throw(__('messages.something_went_wrong'), 500);
         }
     }
 
@@ -50,6 +51,8 @@ class AuthController extends Controller
             
         } catch (HttpResponseException $ex) {
             throw $ex;
+        } catch (\Exception $e) {
+            return ApiResponseClass::throw(__('messages.something_went_wrong'), 500);
         }
     }
 
@@ -64,6 +67,8 @@ class AuthController extends Controller
             
         } catch (HttpResponseException $ex) {
             throw $ex;
+        } catch (\Exception $e) {
+            return ApiResponseClass::throw(__('messages.something_went_wrong'), 500);
         }
 
     }
@@ -81,7 +86,10 @@ class AuthController extends Controller
             $user->save();
 
             return ApiResponseClass::sendResponse(null,__('messages.password_updated'), 200);
-        } catch (\Exception $e) {
+        } catch (HttpResponseException $ex) {
+            throw $ex;
+        }
+        catch (\Exception $e) {
             return ApiResponseClass::throw(__('messages.something_went_wrong'), 500);
         }
     }

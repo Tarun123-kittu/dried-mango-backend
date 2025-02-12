@@ -8,11 +8,12 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class ResetPasswordNotification extends Notification
+class StaffPasswordSetupNotification extends Notification
 {
+
     use Queueable;
 
-    private $token;
+    protected $token;
 
     public function __construct($token)
     {
@@ -28,10 +29,10 @@ class ResetPasswordNotification extends Notification
     {
         try {
             return (new MailMessage)
-                ->subject('Reset Your Password')
-                ->line('You requested a password reset. Click the button below to reset your password.')
-                ->action('Reset Password', url(config('app.url') . '/reset-password?token=' . $this->token))
-                ->line('If you did not request a password reset, please ignore this email.');
+            ->subject('Set Your Password')
+            ->line('Your account has been created. Please set your password by clicking the button below.')
+            ->action('Set Password', url(config('app.url') . '/reset-password?token=' . $this->token))
+            ->line('If you did not request this, no further action is needed.');
         } catch (\Exception $e) {
             return ApiResponseClass::throw(__('messages.mail_failed'), 500);
         }

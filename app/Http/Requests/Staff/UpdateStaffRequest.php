@@ -1,18 +1,23 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Staff;
 
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
-class UpdatePasswordRequest extends FormRequest
+class   UpdateStaffRequest extends FormRequest
 {
     public function rules()
     {
         return [
-            'current_password' => 'required',
-            'new_password' => 'required|min:6|confirmed',
+            'name' => 'sometimes|string|max:255',
+            'email' => 'sometimes|email|unique:users,email,' . $this->route('id'),
+            'mobile' => 'nullable|string|max:20',
+            'gender' => 'nullable|in:male,female',
+            'address' => 'nullable|string',
+            'status' => 'sometimes|in:0,1',
+            'role_id' => 'sometimes|exists:roles,id',
         ];
     }
 

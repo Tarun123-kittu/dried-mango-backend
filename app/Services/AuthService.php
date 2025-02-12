@@ -20,24 +20,24 @@ class AuthService implements AuthInterface
             ->with(['role:id,name'])
             ->where('email', $request->email)
             ->first();
-    
+
         if (!$user) {
             ApiResponseClass::throw(__('messages.user_not_found'), 404);
         }
-    
+
         if (!Hash::check($request->password, $user->password)) {
             ApiResponseClass::throw(__('messages.invalid_credentials'), 401);
         }
-    
+
         $roleName = optional($user->role)->name ?? 'No Role';
-    
+
         $customClaims = [
             'id' => $user->id,
             'email' => $user->email,
             'name' => $user->name,
             'role' => $roleName,
         ];
-    
+
         try {
             $token = JWTAuth::claims($customClaims)->fromUser($user);
             $user->token = $token;
@@ -49,20 +49,31 @@ class AuthService implements AuthInterface
 
     public function sendResetEmail($email)
     {
+
         $user = User::where('email', $email)->first();
         if (!$user) {
-            ApiResponseClass::throw(__('messages.user_not_found'), 404);
+            return ApiResponseClass::throw(__('messages.user_not_found'), 404);
         }
 
-        $token = Str::random(60);
-        DB::table('password_resets')->updateOrInsert(['email' => $email], [
-            'email' => $email,
-            'token' => Hash::make($token),
-            'created_at' => now(),
-        ]);
+        $plainToken = Str::random(60);
+        $hashedToken = Hash::make($plainToken);
+        try {
 
-        $user->notify(new ResetPasswordNotification($token));
-        return true;
+            DB::table('password_reset_tokens')->updateOrInsert(
+                ['email' => $email],
+                ['token' => $hashedToken, 'created_at' => now()]
+            );
+
+            try {
+                $user->notify(new ResetPasswordNotification($plainToken));
+            } catch (\Exception $e) {
+                return ApiResponseClass::throw(__('messages.mail_failed'), 500);
+            }
+
+            return true;
+        } catch (\Exception $e) {
+            return ApiResponseClass::throw(__('messages.something_went_wrong'), 500);
+        }
     }
 
     public function resetPassword($email, $token, $password)
@@ -79,7 +90,7 @@ class AuthService implements AuthInterface
 
             DB::table('password_reset_tokens')->where('email', $email)->delete();
             return true;
-        }else{
+        } else {
             ApiResponseClass::throw(__('messages.user_not_found'), 404);
         }
 
