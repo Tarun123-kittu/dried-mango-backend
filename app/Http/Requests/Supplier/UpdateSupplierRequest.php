@@ -16,7 +16,7 @@ class UpdateSupplierRequest extends FormRequest
             'email' => 'sometimes|email|unique:suppliers,email,' . $this->route('id'),
             'phone_number' => 'nullable|string|max:20',
             'address' => 'nullable|string',
-            'date_of_joining' => 'nullable|date',
+            'date_of_joining' => 'nullable|date_format:Y-m-d',
             'status' => 'sometimes|in:0,1',
             'gender' => 'nullable|in:male,female',
         ];
